@@ -3,3 +3,5 @@ plotly
 dash
 sqlalchemy
 psycopg2-binary
+dotenv
+dash-bootstrap-components

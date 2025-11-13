@@ -2,13 +2,9 @@
 from dash import Dash, html, dcc, callback, Output, Input
 import pandas as pd
 from sqlalchemy import create_engine, text
-import time
-
-# Aguarda o banco de dados ficar pronto (simulação básica)
-time.sleep(10)
 
 # Configura a conexão com o banco. O host é o nome do serviço no compose: 'db'
-engine = create_engine(f"postgresql+psycopg2://postgres:postgres@db:5432/dashboard_db")
+engine = create_engine(f"postgresql+psycopg2://arthur:postgres@localhost:5432/proj2-tbd-dashboard")
 
 app = Dash(__name__)
 
@@ -26,6 +22,7 @@ def update_graph(_):
     # Consulta os dados do PostgreSQL
     with engine.connect() as conn:
         df = pd.read_sql(text("SELECT * FROM vendas;"), conn)
+        print("Conexão realizada com sucesso!")
 
     # Cria um gráfico de barras simples
     fig = {
