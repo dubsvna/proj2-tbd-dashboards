@@ -13,11 +13,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuração do banco de dados
-DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_HOST = os.getenv('DB_HOST', 'db')
 DB_PORT = os.getenv('DB_PORT', '5432')
 DB_NAME = os.getenv('DB_NAME', 'sistema_vendas')
 DB_USER = os.getenv('DB_USER', 'postgres')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'password')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
 
 # Criar conexão com o banco
 connection_string = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -440,8 +440,10 @@ app.layout = dbc.Container([
     ])
 ], fluid=True)
 
+HOST = "0.0.0.0"
+
 if __name__ == '__main__':
     print("🚀 Iniciando Dashboard de Vendas Estático...")
-    print("📊 Acesse: http://127.0.0.1:8010")
+    print(f"📊 Acesse: http://{HOST}:8010")
     print("⏹️  Para parar o servidor, pressione Ctrl+C")
-    app.run(debug=True, host='127.0.0.1', port=8010)
+    app.run(debug=True, host=HOST, port=8010)
