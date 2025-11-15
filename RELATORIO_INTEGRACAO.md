@@ -207,7 +207,9 @@ INSERT INTO itens_venda (venda_id, produto_id, quantidade, preco_unitario, subto
 
 #### 2.1.4 Procedimento para Exibição de Dados (SELECT)
 
-**Vendas com Informações de Clientes**
+Foram criadas diversas consultas SQL para análise e visualização dos dados, utilizando diferentes tipos de JOINs:
+
+**Query 1: Vendas com Informações de Clientes**
 ```sql
 SELECT 
     v.id as venda_id,
@@ -220,6 +222,76 @@ ORDER BY v.data_venda DESC;
 ```
 
 ![print do resultado do SELECT de vendas com clientes](./imgs/select.png)
+
+**Query 2: Produtos Mais Vendidos (JOIN múltiplas tabelas)**
+```sql
+SELECT 
+    p.nome as produto,
+    c.nome as categoria,
+    SUM(iv.quantidade) as total_vendido,
+    SUM(iv.subtotal) as total_faturado
+FROM produtos p
+JOIN categorias c ON p.categoria_id = c.id
+JOIN itens_venda iv ON p.id = iv.produto_id
+GROUP BY p.id, p.nome, c.nome
+HAVING SUM(iv.subtotal) > 500
+ORDER BY total_faturado DESC;
+```
+
+Esta query utiliza múltiplos JOINs (produtos → categorias e produtos → itens_venda) com agregações e filtro HAVING.
+
+![](./imgs/select-2.png)
+
+**Query 3: Métricas Gerais (JOIN com agregações)**
+```sql
+SELECT 
+    COUNT(DISTINCT v.id) as total_vendas,
+    SUM(v.valor_total) as faturamento_total,
+    AVG(v.valor_total) as ticket_medio,
+    COUNT(DISTINCT c.id) as total_clientes
+FROM vendas v
+JOIN clientes c ON v.cliente_id = c.id;
+```
+
+Esta query utiliza JOIN com múltiplas funções de agregação (COUNT, SUM, AVG).
+
+![](./imgs/select-3.png)
+
+**Query 4: Vendas por Categoria (JOIN em cadeia)**
+```sql
+SELECT 
+    cat.nome as categoria,
+    COUNT(iv.id) as total_itens,
+    SUM(iv.subtotal) as faturamento_categoria
+FROM categorias cat
+JOIN produtos p ON cat.id = p.categoria_id
+JOIN itens_venda iv ON p.id = iv.produto_id
+GROUP BY cat.id, cat.nome
+ORDER BY faturamento_categoria DESC;
+```
+
+Esta query utiliza uma cadeia de JOINs: categorias → produtos → itens_venda.
+
+
+![](./imgs/select-4.png)
+
+**Query 5: Top 10 Clientes (JOIN com GROUP BY)**
+```sql
+SELECT 
+    c.nome as cliente,
+    c.cidade,
+    COUNT(v.id) as total_compras,
+    SUM(v.valor_total) as total_gasto
+FROM clientes c
+JOIN vendas v ON c.id = v.cliente_id
+GROUP BY c.id, c.nome, c.cidade
+ORDER BY total_gasto DESC
+LIMIT 10;
+```
+
+Esta query utiliza JOIN com GROUP BY para agregar dados por cliente.
+
+![](./imgs/select-5.png)
 
 ---
 
